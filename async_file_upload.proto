@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+// connection sanity check
+message PingRequest {
+    string client_id = 1;
+}
+
+message PingResponse {
+    string client_id = 1;
+    string session_id = 2;
+}
+
+// file metadata
+message MetaData {
+    string file_name = 1;
+    string file_type = 2;
+}
+
+// file data
+message File {
+    bytes file_data_bytes = 1;
+}
+
+// file upload request
+message FileUploadRequest {
+    string client_id = 1;
+    string session_id = 2;
+    oneof request {
+        MetaData meta_data = 3;
+        File file_data = 4;
+    }
+}
+
+// file upload response 
+message FileUploadResponse {
+    string file_name = 1;
+    string upload_status = 2;
+}
+
+// file transfer to server service
+service FileTransforToServer {
+    rpc Handshake(PingRequest) returns (PingResponse);
+    rpc UploadToServer(FileUploadRequest) returns (stream FileUploadResponse);
+}
