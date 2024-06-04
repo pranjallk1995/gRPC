@@ -20,7 +20,7 @@ class ServicerSub(Servicer):
         self.connected_clients = {}
         self.file_meta_datas = {}
 
-    async def Handshake(self, request: PingResponse, unused_context):
+    async def Handshake(self, request: PingResponse, unused_context) -> PingResponse:
         if request.client_id is not None:
             self.connected_clients[request.client_id] = str(uuid.uuid4())
             print(f"Got a connection request from Client: {request.client_id}")
