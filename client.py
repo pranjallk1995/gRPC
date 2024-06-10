@@ -7,7 +7,7 @@ from async_file_upload_pb2 import PingRequest, File, MetaData, FileUploadRequest
 from async_file_upload_pb2_grpc import FileTransforToServerStub as Stub
 
 def load_file_metadata() -> MetaData:
-    return MetaData(file_name="file-coderstool.csv", file_type="CSV")
+    return MetaData(file_name="MOCK_DATA.csv", file_type="CSV")
 
 def load_file_data(file_meta_data: MetaData) -> File:
     if file_meta_data.file_type == "CSV":
