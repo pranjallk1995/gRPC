@@ -1,3 +1,4 @@
+import os
 import grpc
 import uuid
 import asyncio
@@ -32,9 +33,11 @@ class ServicerSub(Servicer):
             if request_iterator.session_id == self.connected_clients[request_iterator.client_id]:
                 self.file_meta_datas[request_iterator.session_id] = request_iterator.meta_data
                 print(f"Got request from Client to store: {request_iterator.meta_data.file_name}")
+                if os.path.isfile(f"{request_iterator.meta_data.file_name.split('.')[0]}_server.json"):
+                    os.remove(f"{request_iterator.meta_data.file_name.split('.')[0]}_server.json")
                 yield FileUploadResponse(file_name=request_iterator.meta_data.file_name, upload_status=UploadStatus.PENDING.value)
         elif str(request_iterator.file_data) != "":
-            with open("file_data_server.json", "a") as file:
+            with open(f"{self.file_meta_datas[request_iterator.session_id].file_name.split('.')[0]}_server.json", "a") as file:
                 file.write(request_iterator.file_data.file_data_bytes.decode())
                 yield FileUploadResponse(file_name=self.file_meta_datas[request_iterator.session_id].file_name, upload_status=UploadStatus.IN_PROGRESS.value)
         else:
